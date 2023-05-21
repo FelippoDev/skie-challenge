@@ -110,11 +110,12 @@ class PlatinumRetentionPlan(RetentionPlan):
         return True
     
     def month_retention_period_check(self, input_date: date) -> bool:
-        current_year = True if input_date.year == datetime.now().year else False
+        current_year = True if input_date.year == datetime.now().year \
+            else False
         if current_year:
             last_day_month = (
-                True if (input_date + timedelta(days=1)).month != input_date.month \
-                    else False
+                True if (input_date + timedelta(days=1)).month \
+                    != input_date.month else False
                 )
             if last_day_month:
                 return True
