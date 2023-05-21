@@ -20,10 +20,7 @@ class StandardRetentionPlan(RetentionPlan):
                 f"Expected a <class 'datetime.date'> instance but received \
                     {type(input_date)} instance.")
         
-        retention_time = datetime.now().date() \
-            - timedelta(days=self.retention_days)
-            
-        if retention_time > input_date or datetime.now().date() < input_date:
+        if not self.retention_days_check(input_date):
             return False
         return True
     
@@ -32,6 +29,14 @@ class StandardRetentionPlan(RetentionPlan):
             return False
         return True
     
+    def retention_days_check(self, input_date: date) -> bool:
+        retention_time = datetime.now().date() \
+            - timedelta(days=self.retention_days)
+            
+        if retention_time > input_date or datetime.now().date() < input_date:
+            return False
+        return True
+     
 
 class GoldRetentionPlan(RetentionPlan):
     retention_days = 42
