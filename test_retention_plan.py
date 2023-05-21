@@ -65,6 +65,30 @@ class GoldRetentionPlanTests:
                 day=28
                 )) == True
             )
+        assert (
+            self.retention_plan.retain_snapshot(today.replace(
+                month=4,
+                day=30
+                )) == True
+            )
+        assert (
+            self.retention_plan.retain_snapshot(today + timedelta(days=370)) \
+                == False
+            )
+        assert (
+            self.retention_plan.retain_snapshot(today.replace(
+                year=2020,
+                month=1,
+                day=31
+                )) == False
+            )
+        assert (
+            self.retention_plan.retain_snapshot(today.replace(
+                year=2000,
+                month=12,
+                day=31
+                )) == False
+            )
         
     def test_retention_days_check(self):
         today = date.today()
