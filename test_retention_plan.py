@@ -34,14 +34,14 @@ class StandardRetentionPlanTests:
         today = date.today()
         retention_time = today - timedelta(days=42)
         
-        assert self.retention_plan.retain_snapshot(retention_time) == True
-        assert self.retention_plan.retain_snapshot(today) == True
+        assert self.retention_plan.retention_days_check(retention_time) == True
+        assert self.retention_plan.retention_days_check(today) == True
         assert (
-            self.retention_plan.retain_snapshot(today + timedelta(days=1)) \
+            self.retention_plan.retention_days_check(today + timedelta(days=1)) \
                 == False
             )
         assert (
-            self.retention_plan.retain_snapshot(today - timedelta(days=43)) \
+            self.retention_plan.retention_days_check(today - timedelta(days=43)) \
                 == False
             )
         
@@ -52,68 +52,59 @@ class GoldRetentionPlanTests:
     
     def test_retain_snapshot(self):
         today = date.today()
-        retention_time = today - timedelta(days=42)
+        invalid_date = today - timedelta(days=880)
         
-        assert self.retention_plan.retain_snapshot(retention_time) == True
         assert self.retention_plan.retain_snapshot(today) == True
-        assert (
-            self.retention_plan.retain_snapshot(today + timedelta(days=1)) \
-                == False
-            )
-        assert (
-            self.retention_plan.retain_snapshot(today.replace(
-                month=1, 
-                day=31
-                )) == True
-            )
-        assert (
-            self.retention_plan.retain_snapshot(today.replace(
-                month=2,
-                day=28
-                )) == True
-            )
-        assert (
-            self.retention_plan.retain_snapshot(today.replace(
-                month=4,
-                day=30
-                )) == True
-            )
-        assert (
-            self.retention_plan.retain_snapshot(today + timedelta(days=370)) \
-                == False
-            )
-        assert (
-            self.retention_plan.retain_snapshot(today.replace(
-                year=2020,
-                month=1,
-                day=31
-                )) == False
-            )
-        assert (
-            self.retention_plan.retain_snapshot(today.replace(
-                year=2000,
-                month=12,
-                day=31
-                )) == False
-            )
+        assert self.retention_plan.retain_snapshot(invalid_date) == False
         
     def test_retention_days_check(self):
         today = date.today()
         retention_time = today - timedelta(days=42)
         
-        assert self.retention_plan.retain_snapshot(retention_time) == True
-        assert self.retention_plan.retain_snapshot(today) == True
+        assert self.retention_plan.retention_days_check(retention_time) \
+            == True
+        assert self.retention_plan.retention_days_check(today) == True
         assert (
-            self.retention_plan.retain_snapshot(today + timedelta(days=1)) \
-                == False
+            self.retention_plan.retention_days_check(
+                today + timedelta(days=1)) == False
             )
         assert (
-            self.retention_plan.retain_snapshot(today + timedelta(days=43)) \
-                == False
+            self.retention_plan.retention_days_check(
+                today + timedelta(days=43)) == False
             )
     
     def test_month_retention_period_check(self):
-        pass
+        today = date.today()
+        
+        assert (
+            self.retention_plan.month_retention_period_check(today.replace(
+                month=1, 
+                day=31
+                )) == True
+            )
+        assert (
+            self.retention_plan.month_retention_period_check(today.replace(
+                month=2,
+                day=28
+                )) == True
+            )
+        assert (
+            self.retention_plan.month_retention_period_check(today.replace(
+                month=4,
+                day=30
+                )) == True
+            )
+        assert (
+            self.retention_plan.month_retention_period_check(
+                today + timedelta(days=370)) == False
+            )
+        assert (
+            self.retention_plan.month_retention_period_check(today.replace(
+                year=2020,
+                month=1,
+                day=31
+                )) == False
+            )
     
     def test_input_validation(self):
         assert self.retention_plan.input_validation("2023-05-21") == False
@@ -128,6 +119,7 @@ class GoldRetentionPlanTests:
             self.retention_plan.input_validation(date.today() \
                 + timedelta(days=10)) == True
             )
+
 
 @mark.platinum
 class PlatinumRetentionPlanTests:
