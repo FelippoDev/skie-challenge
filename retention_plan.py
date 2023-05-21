@@ -118,7 +118,7 @@ class PlatinumRetentionPlan(RetentionPlan):
     def year_retention_period_check(self, input_date: date) -> bool:
         retention_limit_year = datetime.now().date() - timedelta(days=365 * 7)
         if retention_limit_year <= input_date:
-            if input_date.day == 31:
+            if input_date.day == 31 and input_date.month == 12:
                 return True
         return False
     
