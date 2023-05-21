@@ -23,11 +23,11 @@ class StandardRetentionPlan(RetentionPlan):
         retention_time = datetime.now().date() \
             - timedelta(days=self.retention_days)
             
-        if retention_time > input_date:
+        if retention_time > input_date or datetime.now().date() < input_date:
             return False
         return True
     
     def input_validation(self, input) -> bool:
-        if type(input) != type(date):
+        if type(input) != date:
             return False
         return True
