@@ -19,6 +19,10 @@ class StandardRetentionPlanTests:
             self.retention_plan.retain_snapshot(today + timedelta(days=1)) \
                 == False
             )
+        assert (
+            self.retention_plan.retain_snapshot(today - timedelta(days=43)) \
+                == False
+            )
         
     def test_input_validation(self):
         assert self.retention_plan.input_validation("2023-05-21") == False
@@ -50,6 +54,10 @@ class GoldRetentionPlanTests:
                 == False
             )
         assert (
+            self.retention_plan.retain_snapshot(today - timedelta(days=43)) \
+                == False
+            )
+        assert (
             self.retention_plan.retain_snapshot(today.replace(
                 month=1, 
                 day=31
@@ -66,7 +74,6 @@ class GoldRetentionPlanTests:
         today = date.today()
         retention_time = today - timedelta(days=42)
         
-
         assert self.retention_plan.retain_snapshot(retention_time) == True
         assert self.retention_plan.retain_snapshot(today) == True
         assert (
